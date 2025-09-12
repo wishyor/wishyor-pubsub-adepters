@@ -1,0 +1,52 @@
+# Source files
+src/
+examples/
+scripts/
+
+# Development files
+.eslintrc.js
+.prettierrc
+jest.config.js
+tsconfig.json
+tsconfig.build.json
+*.tsbuildinfo
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+**/__tests__/
+coverage/
+
+# Development dependencies
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+
+# Git files
+.git/
+.gitignore
+
+# CI/CD files
+.github/
+.travis.yml
+.circleci/
+
+# Documentation source
+docs/
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env*
+
+# Cache directories
+.cache/
+.nyc_output/
+
+# OS files
+.DS_Store
+Thumbs.db
