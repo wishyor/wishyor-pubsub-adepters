@@ -53,6 +53,9 @@
     "type": "git",
     "url": "https://github.com/wishyor/pubsub-adapters.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "bugs": {
     "url": "https://github.com/wishyor/pubsub-adapters/issues"
   },
