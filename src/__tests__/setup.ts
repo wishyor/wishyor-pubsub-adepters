@@ -10,13 +10,17 @@ const originalConsole = { ...console };
 
 beforeEach(() => {
   // Reset console mocks before each test
+  // eslint-disable-next-line no-console
   console.log = jest.fn();
+  // eslint-disable-next-line no-console
   console.warn = jest.fn();
+  // eslint-disable-next-line no-console
   console.error = jest.fn();
 });
 
 afterEach(() => {
   // Restore console after each test
+  // eslint-disable-next-line no-console
   Object.assign(console, originalConsole);
 });
 
