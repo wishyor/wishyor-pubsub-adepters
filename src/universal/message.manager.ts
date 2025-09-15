@@ -1,8 +1,8 @@
-import { IBrokerAdapter, IBrokerConfig, IMessage, ISubscription, IMessageHandler } from '@/types'
-import { UniversalHandlerRegistry } from './message.handler'
-import { UniversalMessageQueue } from './message.queue'
-import { UniversalPerformanceMonitor } from './performance.monitor'
-import { UniversalSubscriptionManager } from './subscription.manager'
+import { IBrokerAdapter, IBrokerConfig, IMessage, ISubscription, IMessageHandler } from '@/types';
+import { UniversalHandlerRegistry } from './message.handler';
+import { UniversalMessageQueue } from './message.queue';
+import { UniversalPerformanceMonitor } from './performance.monitor';
+import { UniversalSubscriptionManager } from './subscription.manager';
 
 /**
  * Universal message manager that provides a unified interface for message brokers
@@ -26,14 +26,14 @@ import { UniversalSubscriptionManager } from './subscription.manager'
  * ```
  */
 export class UniversalMessageManager {
-  private adapter: IBrokerAdapter
-  private subscriptionManager = new UniversalSubscriptionManager()
-  private messageQueue = new UniversalMessageQueue()
-  private handlerRegistry = new UniversalHandlerRegistry()
-  private performanceMonitor = new UniversalPerformanceMonitor()
-  private isProcessing = false
-  private processingInterval?: NodeJS.Timeout
-  private config: IBrokerConfig
+  private adapter: IBrokerAdapter;
+  private subscriptionManager = new UniversalSubscriptionManager();
+  private messageQueue = new UniversalMessageQueue();
+  private handlerRegistry = new UniversalHandlerRegistry();
+  private performanceMonitor = new UniversalPerformanceMonitor();
+  private isProcessing = false;
+  private processingInterval?: NodeJS.Timeout;
+  private config: IBrokerConfig;
 
   /**
    * Creates a new UniversalMessageManager instance.
@@ -42,9 +42,9 @@ export class UniversalMessageManager {
    * @param config - Configuration options for the message manager
    */
   constructor(adapter: IBrokerAdapter, config: IBrokerConfig) {
-    this.adapter = adapter
-    this.config = config
-    this.setupMessageHandling()
+    this.adapter = adapter;
+    this.config = config;
+    this.setupMessageHandling();
   }
 
   private setupMessageHandling(): void {}
@@ -60,18 +60,18 @@ export class UniversalMessageManager {
    * ```
    */
   async connect(): Promise<void> {
-    await this.adapter.connect()
-    this.startProcessing()
+    await this.adapter.connect();
+    this.startProcessing();
 
     if (this.adapter.getMetrics) {
       setInterval(async () => {
         try {
-          const metrics = await this.adapter.getMetrics!()
-          this.performanceMonitor.recordBrokerMetrics(this.adapter.getType(), metrics)
+          const metrics = await this.adapter.getMetrics!();
+          this.performanceMonitor.recordBrokerMetrics(this.adapter.getType(), metrics);
         } catch (error) {
-          console.error('Failed to collect broker metrics:', error)
+          console.error('Failed to collect broker metrics:', error);
         }
-      }, 30000)
+      }, 30000);
     }
   }
 
@@ -79,49 +79,49 @@ export class UniversalMessageManager {
    * Disconnects from the message broker and stops all processing.
    */
   async disconnect(): Promise<void> {
-    this.stopProcessing()
-    await this.adapter.disconnect()
+    this.stopProcessing();
+    await this.adapter.disconnect();
   }
 
   private startProcessing(): void {
-    if (this.processingInterval) return
+    if (this.processingInterval) return;
 
-    const interval = this.config.features?.persistence ? 10 : 1
+    const interval = this.config.features?.persistence ? 10 : 1;
 
     this.processingInterval = setInterval(async () => {
-      if (this.isProcessing) return
+      if (this.isProcessing) return;
 
-      this.isProcessing = true
+      this.isProcessing = true;
       try {
-        await this.processQueues()
+        await this.processQueues();
       } finally {
-        this.isProcessing = false
+        this.isProcessing = false;
       }
-    }, interval)
+    }, interval);
   }
 
   private stopProcessing(): void {
     if (this.processingInterval) {
-      clearInterval(this.processingInterval)
-      this.processingInterval = undefined
+      clearInterval(this.processingInterval);
+      this.processingInterval = undefined;
     }
   }
 
   private async processQueues(): Promise<void> {
-    const topics = this.subscriptionManager.getAllTopics()
+    const topics = this.subscriptionManager.getAllTopics();
 
     for (const topic of topics) {
-      const message = await this.messageQueue.dequeue(topic)
+      const message = await this.messageQueue.dequeue(topic);
       if (message) {
-        const startTime = Date.now()
+        const startTime = Date.now();
         try {
-          await this.adapter.publish(topic, message)
-          const latency = Date.now() - startTime
-          this.performanceMonitor.recordLatency('publish', latency, this.adapter.getType())
+          await this.adapter.publish(topic, message);
+          const latency = Date.now() - startTime;
+          this.performanceMonitor.recordLatency('publish', latency, this.adapter.getType());
         } catch (error) {
-          console.error(`Failed to publish message for topic ${topic}:`, error)
+          console.error(`Failed to publish message for topic ${topic}:`, error);
 
-          await this.messageQueue.enqueue(topic, message)
+          await this.messageQueue.enqueue(topic, message);
         }
       }
     }
@@ -149,43 +149,43 @@ export class UniversalMessageManager {
     topic: string,
     callback: (message: IMessage) => void,
     options?: {
-      filters?: Record<string, any>
-      consumerGroup?: string
-      queueGroup?: string
-    },
+      filters?: Record<string, any>;
+      consumerGroup?: string;
+      queueGroup?: string;
+    }
   ): Promise<string> {
-    const subscriptionId = `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    const subscriptionId = `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     const subscription: ISubscription = {
       id: subscriptionId,
       topic,
       callback: async (message: IMessage) => {
-        const startTime = Date.now()
+        const startTime = Date.now();
         try {
           if (this.subscriptionManager.matchesFilters(message, options?.filters)) {
-            await this.handlerRegistry.handle(message)
-            callback(message)
+            await this.handlerRegistry.handle(message);
+            callback(message);
           }
         } catch (error) {
-          console.error(`Subscription callback error for ${subscriptionId}:`, error)
+          console.error(`Subscription callback error for ${subscriptionId}:`, error);
         } finally {
-          const latency = Date.now() - startTime
-          this.performanceMonitor.recordLatency('subscription', latency, this.adapter.getType())
+          const latency = Date.now() - startTime;
+          this.performanceMonitor.recordLatency('subscription', latency, this.adapter.getType());
         }
       },
       filters: options?.filters,
       consumerGroup: options?.consumerGroup,
       queueGroup: options?.queueGroup,
-    }
+    };
 
-    this.subscriptionManager.subscribe(subscription)
+    this.subscriptionManager.subscribe(subscription);
 
     await this.adapter.subscribe(topic, subscription.callback, {
       consumerGroup: options?.consumerGroup,
       queueGroup: options?.queueGroup,
-    })
+    });
 
-    return subscriptionId
+    return subscriptionId;
   }
 
   /**
@@ -196,11 +196,11 @@ export class UniversalMessageManager {
    * @returns True if successfully unsubscribed, false if subscription not found
    */
   async unsubscribe(topic: string, subscriptionId: string): Promise<boolean> {
-    const removed = this.subscriptionManager.unsubscribe(topic, subscriptionId)
+    const removed = this.subscriptionManager.unsubscribe(topic, subscriptionId);
     if (removed) {
-      await this.adapter.unsubscribe(subscriptionId)
+      await this.adapter.unsubscribe(subscriptionId);
     }
-    return removed
+    return removed;
   }
 
   /**
@@ -228,9 +228,9 @@ export class UniversalMessageManager {
       payload,
       timestamp: Date.now(),
       ...options,
-    }
+    };
 
-    await this.messageQueue.enqueue(topic, message)
+    await this.messageQueue.enqueue(topic, message);
   }
 
   /**
@@ -248,12 +248,12 @@ export class UniversalMessageManager {
       payload,
       timestamp: Date.now(),
       ...options,
-    }
+    };
 
-    const startTime = Date.now()
-    await this.adapter.publish(topic, message)
-    const latency = Date.now() - startTime
-    this.performanceMonitor.recordLatency('publish_immediate', latency, this.adapter.getType())
+    const startTime = Date.now();
+    await this.adapter.publish(topic, message);
+    const latency = Date.now() - startTime;
+    this.performanceMonitor.recordLatency('publish_immediate', latency, this.adapter.getType());
   }
 
   /**
@@ -263,7 +263,7 @@ export class UniversalMessageManager {
    * @param handler - The handler implementation
    */
   registerHandler(messageType: string, handler: IMessageHandler): void {
-    this.handlerRegistry.register(messageType, handler)
+    this.handlerRegistry.register(messageType, handler);
   }
 
   /**
@@ -272,7 +272,7 @@ export class UniversalMessageManager {
    * @param handler - The global handler implementation
    */
   registerGlobalHandler(handler: IMessageHandler): void {
-    this.handlerRegistry.registerGlobal(handler)
+    this.handlerRegistry.registerGlobal(handler);
   }
 
   /**
@@ -281,7 +281,7 @@ export class UniversalMessageManager {
    * @param middleware - The middleware function
    */
   addMiddleware(middleware: (message: IMessage, next: () => Promise<void>) => Promise<void>): void {
-    this.handlerRegistry.addMiddleware(middleware)
+    this.handlerRegistry.addMiddleware(middleware);
   }
 
   /**
@@ -290,7 +290,7 @@ export class UniversalMessageManager {
    * @returns Object containing performance metrics
    */
   getPerformanceMetrics(): Record<string, any> {
-    return this.performanceMonitor.getMetrics()
+    return this.performanceMonitor.getMetrics();
   }
 
   /**
@@ -299,14 +299,14 @@ export class UniversalMessageManager {
    * @returns Object mapping topic names to queue sizes
    */
   getQueueSizes(): Record<string, number> {
-    const topics = this.subscriptionManager.getAllTopics()
-    const sizes: Record<string, number> = {}
+    const topics = this.subscriptionManager.getAllTopics();
+    const sizes: Record<string, number> = {};
 
     for (const topic of topics) {
-      sizes[topic] = this.messageQueue.getQueueSize(topic)
+      sizes[topic] = this.messageQueue.getQueueSize(topic);
     }
 
-    return sizes
+    return sizes;
   }
 
   /**
@@ -315,7 +315,7 @@ export class UniversalMessageManager {
    * @returns The broker type (e.g., 'redis', 'rabbitmq', 'kafka')
    */
   getBrokerType(): string {
-    return this.adapter.getType()
+    return this.adapter.getType();
   }
 
   /**
@@ -324,7 +324,7 @@ export class UniversalMessageManager {
    * @returns True if connected, false otherwise
    */
   isConnected(): boolean {
-    return this.adapter.isConnected()
+    return this.adapter.isConnected();
   }
 
   /**
@@ -334,6 +334,6 @@ export class UniversalMessageManager {
    * @returns Array of messages that failed processing
    */
   getDLQMessages(topic: string): IMessage[] {
-    return this.messageQueue.getDLQMessages(topic)
+    return this.messageQueue.getDLQMessages(topic);
   }
 }

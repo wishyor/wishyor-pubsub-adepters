@@ -95,12 +95,14 @@ describe('KafkaAdapter', () => {
 
       expect(mockProducer.send).toHaveBeenCalledWith({
         topic: 'test-topic',
-        messages: [{
-          key: 'msg-123',
-          value: JSON.stringify(message),
-          partition: undefined,
-          headers: undefined,
-        }],
+        messages: [
+          {
+            key: 'msg-123',
+            value: JSON.stringify(message),
+            partition: undefined,
+            headers: undefined,
+          },
+        ],
       });
     });
 
@@ -117,12 +119,14 @@ describe('KafkaAdapter', () => {
 
       expect(mockProducer.send).toHaveBeenCalledWith({
         topic: 'test-topic',
-        messages: [{
-          key: 'msg-123',
-          value: JSON.stringify(message),
-          partition: 2,
-          headers: undefined,
-        }],
+        messages: [
+          {
+            key: 'msg-123',
+            value: JSON.stringify(message),
+            partition: 2,
+            headers: undefined,
+          },
+        ],
       });
     });
   });

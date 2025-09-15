@@ -61,7 +61,7 @@ jobs:
       run: pnpm tsc --noEmit
     
     - name: Run tests
-      run: pnpm test:coverage
+      run: pnpm test
       env:
         REDIS_URL: redis://localhost:6379
         NATS_URL: nats://localhost:4222

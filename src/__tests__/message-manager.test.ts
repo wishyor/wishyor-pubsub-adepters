@@ -124,11 +124,7 @@ describe('UniversalMessageManager', () => {
       const subscriptionId = await manager.subscribe('user.events', callback);
 
       expect(subscriptionId).toMatch(/^sub_/);
-      expect(mockAdapter.subscribe).toHaveBeenCalledWith(
-        'user.events',
-        expect.any(Function),
-        {}
-      );
+      expect(mockAdapter.subscribe).toHaveBeenCalledWith('user.events', expect.any(Function), {});
     });
 
     it('should subscribe with options', async () => {
@@ -140,11 +136,9 @@ describe('UniversalMessageManager', () => {
 
       await manager.subscribe('user.events', callback, options);
 
-      expect(mockAdapter.subscribe).toHaveBeenCalledWith(
-        'user.events',
-        expect.any(Function),
-        { consumerGroup: 'processors' }
-      );
+      expect(mockAdapter.subscribe).toHaveBeenCalledWith('user.events', expect.any(Function), {
+        consumerGroup: 'processors',
+      });
     });
 
     it('should unsubscribe from topics', async () => {
