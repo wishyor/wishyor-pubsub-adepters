@@ -33,6 +33,6 @@ export class RetryHandler implements IMessageHandler {
   }
 
   private async processMessage(message: IMessage): Promise<void> {
-    throw new Error('Message processing not implemented')
+    throw new Error('Message processing not implemented'+ message)
   }
 }

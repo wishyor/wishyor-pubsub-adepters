@@ -65,7 +65,7 @@ export class KafkaAdapter implements IBrokerAdapter {
           parsedMessage.partition = partition.toString()
           await callback(parsedMessage)
         } catch (error) {
-          console.error('Kafka message processing error:', error)
+          console.error('Kafka message processing error:', error,topic)
         }
       },
     })

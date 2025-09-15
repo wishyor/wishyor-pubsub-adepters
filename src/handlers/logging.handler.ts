@@ -6,6 +6,7 @@ export class LoggingHandler implements IMessageHandler {
   constructor(private logLevel: 'info' | 'debug' | 'error' = 'info') {}
 
   canHandle(message: IMessage): boolean {
+    console.log(message)
     return true
   }
 
