@@ -310,6 +310,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 📖 [Documentation](https://github.com/wishyor/pubsub-adapters/wiki)
-- 🐛 [Issue Tracker](https://github.com/wishyor/pubsub-adapters/issues)
-- 💬 [Discussions](https://github.com/wishyor/pubsub-adapters/discussions)
+- 🐛 [Issue Tracker](https://github.com/wishyor/wishyor-pubsub-adepters/issues)
