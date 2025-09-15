@@ -54,7 +54,7 @@
     "url": "https://github.com/wishyor/wishyor-pubsub-adepters.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/"
   },
   "bugs": {
     "url": "https://github.com/wishyor/wishyor-pubsub-adepters/issues"
