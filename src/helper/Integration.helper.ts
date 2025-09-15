@@ -66,7 +66,6 @@ export class IntegrationHelper {
     const messageIds = new Set<string>()
     manager.addMiddleware(async (message, next) => {
       if (messageIds.has(message.id)) {
-        console.log(`Duplicate message detected: ${message.id}`)
         return
       }
 

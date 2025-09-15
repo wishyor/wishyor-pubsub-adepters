@@ -10,11 +10,32 @@ module.exports = {
   ],
   rules: {
     'no-unused-vars': 'off',
-    'no-console': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'no-console': 'off',
+    'no-undef': 'off',
   },
   env: {
     node: true,
     es6: true,
+    jest: true,
   },
+  overrides: [
+    {
+      files: ['**/__tests__/**/*', '**/*.test.*'],
+      env: {
+        jest: true,
+      },
+      globals: {
+        jest: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+      },
+    },
+  ],
   ignorePatterns: ['dist/', 'node_modules/', '*.js'],
 };
