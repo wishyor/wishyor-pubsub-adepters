@@ -1,4 +1,4 @@
-import { IMessage } from '@/types'
+import { IMessage } from '@/types';
 
 /**
  * Priority-based message queue with Dead Letter Queue (DLQ) support.
@@ -26,25 +26,25 @@ export class UniversalMessageQueue {
    * Map storing message queues by topic
    * @private
    */
-  private queues = new Map<string, IMessage[]>()
+  private queues = new Map<string, IMessage[]>();
 
   /**
    * Set of topics currently being processed
    * @private
    */
-  private processing = new Set<string>()
+  private processing = new Set<string>();
 
   /**
    * Maximum number of messages per queue before overflow to DLQ
    * @private
    */
-  private maxQueueSize = 10000
+  private maxQueueSize = 10000;
 
   /**
    * Dead Letter Queue for messages that couldn't be processed
    * @private
    */
-  private dlq = new Map<string, IMessage[]>()
+  private dlq = new Map<string, IMessage[]>();
 
   /**
    * Adds a message to the queue with priority-based insertion.
@@ -66,22 +66,22 @@ export class UniversalMessageQueue {
    */
   async enqueue(topic: string, message: IMessage): Promise<void> {
     if (!this.queues.has(topic)) {
-      this.queues.set(topic, [])
+      this.queues.set(topic, []);
     }
-    const queue = this.queues.get(topic)!
+    const queue = this.queues.get(topic)!;
     if (queue.length >= this.maxQueueSize) {
-      this.enqueueToDLQ(topic, message)
-      return
+      this.enqueueToDLQ(topic, message);
+      return;
     }
-    const priority = this.getPriorityValue(message.priority)
-    let insertIndex = queue.length
+    const priority = this.getPriorityValue(message.priority);
+    let insertIndex = queue.length;
     for (let i = 0; i < queue.length; i++) {
       if (this.getPriorityValue(queue[i]?.priority) < priority) {
-        insertIndex = i
-        break
+        insertIndex = i;
+        break;
       }
     }
-    queue.splice(insertIndex, 0, message)
+    queue.splice(insertIndex, 0, message);
   }
 
   /**
@@ -93,9 +93,9 @@ export class UniversalMessageQueue {
    */
   private enqueueToDLQ(topic: string, message: IMessage): void {
     if (!this.dlq.has(topic)) {
-      this.dlq.set(topic, [])
+      this.dlq.set(topic, []);
     }
-    this.dlq.get(topic)!.push(message)
+    this.dlq.get(topic)!.push(message);
   }
 
   /**
@@ -113,8 +113,8 @@ export class UniversalMessageQueue {
    * ```
    */
   async dequeue(topic: string): Promise<IMessage | null> {
-    const queue = this.queues.get(topic)
-    return queue?.shift() || null
+    const queue = this.queues.get(topic);
+    return queue?.shift() || null;
   }
 
   /**
@@ -130,7 +130,7 @@ export class UniversalMessageQueue {
    * ```
    */
   getDLQMessages(topic: string): IMessage[] {
-    return this.dlq.get(topic) || []
+    return this.dlq.get(topic) || [];
   }
 
   /**
@@ -144,15 +144,15 @@ export class UniversalMessageQueue {
   private getPriorityValue(priority?: string): number {
     switch (priority) {
       case 'critical':
-        return 4
+        return 4;
       case 'high':
-        return 3
+        return 3;
       case 'normal':
-        return 2
+        return 2;
       case 'low':
-        return 1
+        return 1;
       default:
-        return 2
+        return 2;
     }
   }
 
@@ -163,7 +163,7 @@ export class UniversalMessageQueue {
    * @returns Number of messages in the queue
    */
   getQueueSize(topic: string): number {
-    return this.queues.get(topic)?.length || 0
+    return this.queues.get(topic)?.length || 0;
   }
 
   /**
@@ -182,11 +182,11 @@ export class UniversalMessageQueue {
    */
   clear(topic?: string): void {
     if (topic) {
-      this.queues.delete(topic)
-      this.dlq.delete(topic)
+      this.queues.delete(topic);
+      this.dlq.delete(topic);
     } else {
-      this.queues.clear()
-      this.dlq.clear()
+      this.queues.clear();
+      this.dlq.clear();
     }
   }
 }

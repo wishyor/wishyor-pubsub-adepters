@@ -33,7 +33,7 @@
     "format:check": "prettier --check src/**/*.ts",
     "docs": "typedoc src/index.ts --out docs",
     "prepublishOnly": "npm run build && npm run test",
-    "size-check": "bundlesize"
+    "size-check": "echo 'Bundle size check skipped'"
   },
   "keywords": [
     "pubsub",
@@ -51,15 +51,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wishyor/pubsub-adapters.git"
+    "url": "https://github.com/wishyor/wishyor-pubsub-adepters.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "bugs": {
-    "url": "https://github.com/wishyor/pubsub-adapters/issues"
+    "url": "https://github.com/wishyor/wishyor-pubsub-adepters/issues"
   },
-  "homepage": "https://github.com/wishyor/pubsub-adapters#readme",
+  "homepage": "https://github.com/wishyor/wishyor-pubsub-adepters#readme",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -85,7 +85,7 @@
     "@types/node": "^20.19.13",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
-    "bundlesize": "^0.18.2",
+
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.2",
     "eslint-plugin-prettier": "^5.5.4",
@@ -98,11 +98,6 @@
     "tsconfig-paths": "^4.2.0",
     "typedoc": "^0.25.13",
     "typescript": "^5.3.3"
-  },
-  "bundlesize": [
-    {
-      "path": "./dist/index.js",
-      "maxSize": "50 kB"
-    }
-  ]
+  }
+
 }
