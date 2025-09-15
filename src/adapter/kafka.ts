@@ -1,5 +1,9 @@
-import { IBrokerAdapter, IBrokerConfig, IMessage, BrokerMetrics } from '@/types'
+import { IBrokerAdapter, IBrokerConfig, IMessage, BrokerMetrics, SubscriptionOptions, MessageCallback } from '@/types'
 
+/**
+ * Kafka message broker adapter implementing the universal broker interface.
+ * Provides Kafka-specific functionality including partitioning and consumer groups.
+ */
 export class KafkaAdapter implements IBrokerAdapter {
   private kafka: any
   private producer: any
@@ -9,11 +13,12 @@ export class KafkaAdapter implements IBrokerAdapter {
   constructor(private config: IBrokerConfig, private kafkaJS: any) {}
 
   async connect(): Promise<void> {
-    this.kafka = this.kafkaJS.kafka({
-      clientId: 'universal-message-broker',
+    const options = {
+      clientId: this.config.clientId || 'universal-message-broker',
       brokers: this.config.connection.urls || [this.config.connection.url || 'localhost:9092'],
       ...this.config.connection.options,
-    })
+    }
+    this.kafka = new this.kafkaJS(options)
 
     this.producer = this.kafka.producer()
     await this.producer.connect()
@@ -43,8 +48,8 @@ export class KafkaAdapter implements IBrokerAdapter {
 
   async subscribe(
     topic: string,
-    callback: (message: IMessage) => void,
-    options?: any,
+    callback: MessageCallback,
+    options?: SubscriptionOptions,
   ): Promise<string> {
     const subscriptionId = `kafka_sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     const groupId = options?.consumerGroup || `group_${subscriptionId}`

@@ -4,11 +4,11 @@
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Universal pub/sub message broker adapters with full TypeScript support for Redis, NATS, and Kafka. Provides a unified interface for message publishing and subscription across different message brokers with built-in performance monitoring, circuit breakers, and retry mechanisms.
+Universal pub/sub message broker adapters with full TypeScript support for Redis and Kafka. NATS support is in beta. Provides a unified interface for message publishing and subscription across different message brokers with built-in performance monitoring, circuit breakers, and retry mechanisms.
 
 ## Features
 
-- 🚀 **Universal Interface**: Single API for Redis, NATS, and Kafka
+- 🚀 **Universal Interface**: Single API for Redis and Kafka (NATS in beta)
 - 📝 **Full TypeScript Support**: Complete type definitions and IntelliSense
 - ⚡ **High Performance**: Optimized for throughput and low latency
 - 🔄 **Retry Logic**: Built-in exponential backoff and circuit breakers
@@ -24,9 +24,9 @@ Universal pub/sub message broker adapters with full TypeScript support for Redis
 npm install @wishyor/pubsub-adapters
 
 # Install peer dependencies for your chosen broker(s)
-npm install ioredis        # For Redis
-npm install nats           # For NATS
-npm install kafkajs        # For Kafka
+npm install ioredis        # For Redis (Production Ready)
+npm install kafkajs        # For Kafka (Production Ready)
+npm install nats           # For NATS (Beta)
 ```
 
 ## Quick Start
@@ -58,7 +58,9 @@ await manager.publish('user.events', {
 });
 ```
 
-### NATS Example
+### NATS Example (Beta)
+
+> **Note**: NATS support is currently in beta. Use with caution in production environments.
 
 ```typescript
 import { MessageBrokerFactory } from '@wishyor/pubsub-adapters';
@@ -259,6 +261,14 @@ interface IMessage<T = any> {
 }
 ```
 
+## Broker Support Status
+
+| Broker | Status | Notes |
+|--------|--------|---------|
+| Redis | ✅ **Production Ready** | Fully tested and stable |
+| Kafka | ✅ **Production Ready** | Fully tested with partitioning support |
+| NATS | 🚧 **Beta** | Basic functionality, use with caution in production |
+
 ## Performance Optimization
 
 ### Best Practices
@@ -271,11 +281,11 @@ interface IMessage<T = any> {
 
 ### Benchmarks
 
-| Broker | Throughput (msg/s) | Latency (ms) | Memory (MB) |
-|--------|-------------------|--------------|-------------|
-| Redis  | 50,000+           | < 1          | 25          |
-| NATS   | 100,000+          | < 0.5        | 20          |
-| Kafka  | 75,000+           | < 2          | 35          |
+| Broker | Status | Throughput (msg/s) | Latency (ms) | Memory (MB) |
+|--------|--------|-------------------|--------------|-------------|
+| Redis  | ✅ Stable | 50,000+           | < 1          | 25          |
+| Kafka  | ✅ Stable | 75,000+           | < 2          | 35          |
+| NATS   | 🚧 Beta | 100,000+          | < 0.5        | 20          |
 
 ## Examples
 
